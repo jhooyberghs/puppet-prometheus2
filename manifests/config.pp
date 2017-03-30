@@ -5,7 +5,9 @@ class prometheus::config(
   $rule_files,
   $scrape_configs,
   $purge = true,
-  $config_template = $::prometheus::params::config_template,
+  $config_source        = $::prometheus::params::config_source,
+  $config_template      = $::prometheus::params::config_template,
+  $config_type          = $::prometheus::params::config_type,
 ) {
 
   if $prometheus::init_style {
@@ -90,7 +92,16 @@ class prometheus::config(
     owner   => $prometheus::user,
     group   => $prometheus::group,
     mode    => $prometheus::config_mode,
-    content => template($config_template),
+    content => $config_type ? {
+      'content' => template($config_template),
+      'source'  => undef,
+      default   => fail("Config file type ${config_type} is not supported by this module"),
+    },
+    source  => $config_type ? {
+      'source'  => $config_source,
+      'content' => undef,
+      default   => fail("Config file type ${config_type} is not supported by this module"),
+    },
   }
 
 }
