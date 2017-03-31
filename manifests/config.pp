@@ -106,8 +106,8 @@ class prometheus::config(
     owner   => $prometheus::user,
     group   => $prometheus::group,
     mode    => $prometheus::config_mode,
-    content => $prometheus::_config_type,
-    source  => $prometheus::_config_type,
+    content => $_config_template,
+    source  => $_config_source,
   }
 
 }
