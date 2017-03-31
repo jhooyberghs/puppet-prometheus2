@@ -74,7 +74,7 @@
 #  Configuration template to use (template/prometheus.yaml.erb)
 #
 #  [*config_type*]
-#  Type of config to use, could be template or file. (default template)
+#  Type of config to use, could be template or source. (default template)
 #
 #  [*config_mode*]
 #  Configuration file mode (default 0660)
@@ -134,7 +134,7 @@ class prometheus (
   $config_defaults      = {},
   $config_source        = $::prometheus::params::config_source,
   $config_template      = $::prometheus::params::config_template,
-  $config_type          = $::prometheus::params::config_template_type,
+  $config_type          = $::prometheus::params::config_type,
   $config_mode          = $::prometheus::params::config_mode,
   $service_enable       = true,
   $service_ensure       = 'running',

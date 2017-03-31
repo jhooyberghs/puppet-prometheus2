@@ -93,14 +93,14 @@ class prometheus::config(
     group   => $prometheus::group,
     mode    => $prometheus::config_mode,
     content => $config_type ? {
-      'content' => template($config_template),
-      'source'  => undef,
-      default   => fail("Config file type ${config_type} is not supported by this module"),
+      'template' => template($config_template),
+      'source'   => undef,
+      default    => fail("Config file type ${config_type} is not supported by this module"),
     },
     source  => $config_type ? {
-      'source'  => $config_source,
-      'content' => undef,
-      default   => fail("Config file type ${config_type} is not supported by this module"),
+      'source'   => $config_source,
+      'template' => undef,
+      default    => fail("Config file type ${config_type} is not supported by this module"),
     },
   }
 
