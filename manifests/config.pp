@@ -10,6 +10,20 @@ class prometheus::config(
   $config_type          = $::prometheus::params::config_type,
 ) {
 
+  case $config_type {
+    'template': {
+      $_config_template = $config_template
+      $_config_source = undef
+    }
+    'source': {
+      $_config_source = $config_source
+      $_config_template = undef
+    }
+    default: {
+      fail("Config file type ${config_type} is not supported by this module")
+    }
+  }
+
   if $prometheus::init_style {
 
     case $prometheus::init_style {
@@ -92,16 +106,8 @@ class prometheus::config(
     owner   => $prometheus::user,
     group   => $prometheus::group,
     mode    => $prometheus::config_mode,
-    content => $config_type ? {
-      'template' => template($config_template),
-      'source'   => undef,
-      default    => fail("Config file type ${config_type} is not supported by this module"),
-    },
-    source  => $config_type ? {
-      'source'   => $config_source,
-      'template' => undef,
-      default    => fail("Config file type ${config_type} is not supported by this module"),
-    },
+    content => $_config_type,
+    source  => $_config_type,
   }
 
 }
