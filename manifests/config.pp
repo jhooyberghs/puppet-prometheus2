@@ -12,7 +12,7 @@ class prometheus::config(
 
   case $config_type {
     'template': {
-      $_config_template = $config_template
+      $_config_template = "template(${config_template})"
       $_config_source = undef
     }
     'source': {
