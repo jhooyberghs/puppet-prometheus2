@@ -12,7 +12,7 @@ class prometheus::config(
 
   case $config_type {
     'template': {
-      $_config_template = "template(${config_template})"
+      $_config_template = $config_template
       $_config_source = undef
     }
     'source': {
@@ -100,14 +100,28 @@ class prometheus::config(
     purge   => $purge,
     recurse => $purge,
   }
-  -> file { 'prometheus.yaml':
-    ensure  => present,
-    path    => "${prometheus::config_dir}/prometheus.yaml",
-    owner   => $prometheus::user,
-    group   => $prometheus::group,
-    mode    => $prometheus::config_mode,
-    content => $_config_template,
-    source  => $_config_source,
+
+  if $_config_source != undef {
+    file { 'prometheus.yaml':
+      ensure  => file,
+      path    => "${prometheus::config_dir}/prometheus.yaml",
+      owner   => $prometheus::user,
+      group   => $prometheus::group,
+      mode    => $prometheus::config_mode,
+      source  => $_config_source,
+      require => File[$prometheus::config_dir],
+    }
   }
 
+  if $_config_template != undef {
+    file { 'prometheus.yaml':
+      ensure  => file,
+      path    => "${prometheus::config_dir}/prometheus.yaml",
+      owner   => $prometheus::user,
+      group   => $prometheus::group,
+      mode    => $prometheus::config_mode,
+      content => template($_config_template),
+      require => File[$prometheus::config_dir],
+    }
+  }
 }

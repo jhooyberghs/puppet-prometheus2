@@ -8,7 +8,13 @@ describe 'prometheus' do
       end
 
       describe 'Create the config file' do
-        context 'with the defaults, using the tempate' do
+        context 'by default, using the template' do
+          it do
+            should contain_file('prometheus.yaml')
+              .with(content: /---/)
+          end
+        end
+        context 'when param congi_type is template' do
           it do
             should contain_file('prometheus.yaml')
               .with(content: /---/)
