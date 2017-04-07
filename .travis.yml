@@ -31,7 +31,6 @@ matrix:
 branches:
   only:
   - master
-  - feature/config_file_types2 
   - /^v\d/
 notifications:
   email: false
