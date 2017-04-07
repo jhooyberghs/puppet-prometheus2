@@ -10,30 +10,29 @@ describe 'prometheus' do
       describe 'Create the config file' do
         context 'by default, using the template' do
           it do
-            should contain_file('prometheus.yaml')
-              .with(content: /---/)
+            is_expected.to contain_file('prometheus.yaml').
+              with(content: %r{---})
           end
         end
         context 'when param congi_type is template' do
+          let(:params) { { 'config_type' => 'template' } }
           it do
-            should contain_file('prometheus.yaml')
-              .with(content: /---/)
+            is_expected.to contain_file('prometheus.yaml').
+              with(content: %r{---})
           end
         end
         context 'when parameter config_type is source and and config_source is supplied' do
           let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/files/prometheus.yaml') }
-          let(:params) { { :config_type => 'source', :config_source => thesource } }
+          let(:params) { { 'config_type' => 'source', 'config_source' => thesource } }
           it do
-            should contain_file('prometheus.yaml')
-              .with(source: thesource)
+            is_expected.to contain_file('prometheus.yaml').
+              with(source: thesource)
           end
         end
         context 'with an invalid config_type' do
-          let(:params) { { :config_type => 'invalid' } }
+          let(:params) { { 'config_type' => 'invalid' } }
           it do
-            expect {
-              catalogue
-            }.to raise_error(Puppet::Error, /is not supported by this module/)
+            expect { catalogue }.to raise_error(Puppet::Error, %r{is not supported by this module})
           end
         end
       end
